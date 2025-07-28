@@ -42,7 +42,7 @@ import {
   type TransactionEntity,
 } from 'loot-core/types/models';
 
-import { TransactionListItem } from './TransactionListItem';
+import { ROW_HEIGHT, TransactionListItem } from './TransactionListItem';
 
 import { FloatingActionBar } from '@desktop-client/components/mobile/FloatingActionBar';
 import { useScrollListener } from '@desktop-client/components/ScrollProvider';
@@ -237,7 +237,7 @@ export function TransactionList({
           aria-label={t('Loading more transactions...')}
           style={{
             // Same height as transaction list item
-            height: 60,
+            height: ROW_HEIGHT,
           }}
         />
       )}
