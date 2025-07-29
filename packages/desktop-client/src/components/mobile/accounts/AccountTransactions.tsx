@@ -33,8 +33,12 @@ import { useDateFormat } from '@desktop-client/hooks/useDateFormat';
 import { useFailedAccounts } from '@desktop-client/hooks/useFailedAccounts';
 import { useNavigate } from '@desktop-client/hooks/useNavigate';
 import { accountSchedulesQuery } from '@desktop-client/hooks/useSchedules';
+import { useSheetValue } from '@desktop-client/hooks/useSheetValue';
 import { useSyncedPref } from '@desktop-client/hooks/useSyncedPref';
-import { useTransactions } from '@desktop-client/hooks/useTransactions';
+import {
+  calculateRunningBalancesTopDown,
+  useTransactions,
+} from '@desktop-client/hooks/useTransactions';
 import { useTransactionsSearch } from '@desktop-client/hooks/useTransactionsSearch';
 import {
   collapseModals,
@@ -274,6 +278,9 @@ function TransactionListWithPreviews({
     [accountId],
   );
 
+  const accountBalanceValue = useSheetValue<'account', 'balance'>(
+    bindings.accountBalance(accountId),
+  );
   const [showBalances] = useSyncedPref(`show-balances-${accountId}`);
   const [transactionsQuery, setTransactionsQuery] = useState<Query>(
     baseTransactionsQuery(),
@@ -288,7 +295,8 @@ function TransactionListWithPreviews({
   } = useTransactions({
     query: transactionsQuery,
     options: {
-      calculateRunningBalances: true,
+      calculateRunningBalances: calculateRunningBalancesTopDown,
+      startingBalance: accountBalanceValue,
     },
   });
 
