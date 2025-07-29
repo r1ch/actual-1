@@ -279,7 +279,7 @@ function TransactionListWithPreviews({
   );
 
   const accountBalanceValue = useSheetValue<'account', 'balance'>(
-    bindings.accountBalance(accountId),
+    bindings.accountBalance(accountId || ''),
   );
   const [showBalances] = useSyncedPref(`show-balances-${accountId}`);
   const [transactionsQuery, setTransactionsQuery] = useState<Query>(
@@ -296,7 +296,7 @@ function TransactionListWithPreviews({
     query: transactionsQuery,
     options: {
       calculateRunningBalances: calculateRunningBalancesTopDown,
-      startingBalance: accountBalanceValue,
+      startingBalance: accountBalanceValue ?? 0,
     },
   });
 
