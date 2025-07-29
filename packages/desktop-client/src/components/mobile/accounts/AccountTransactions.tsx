@@ -278,9 +278,21 @@ function TransactionListWithPreviews({
     [accountId],
   );
 
-  const accountBalanceValue = useSheetValue<'account', 'balance'>(
-    bindings.accountBalance(accountId || ''),
+  const balanceQueries = useMemo(
+    () => queriesFromAccountId(accountId, account),
+    [accountId, account],
   );
+
+  const accountBalanceValue = useSheetValue<
+    'account',
+    | 'balance'
+    | 'accounts-balance'
+    | 'onbudget-accounts-balance'
+    | 'offbudget-accounts-balance'
+    | 'closed-accounts-balance'
+    | 'uncategorized-balance'
+  >(balanceQueries.balance);
+
   const [showBalances] = useSyncedPref(`show-balances-${accountId}`);
   const [transactionsQuery, setTransactionsQuery] = useState<Query>(
     baseTransactionsQuery(),
@@ -394,11 +406,6 @@ function TransactionListWithPreviews({
       }
     },
     [dispatch, navigate],
-  );
-
-  const balanceQueries = useMemo(
-    () => queriesFromAccountId(accountId, account),
-    [accountId, account],
   );
 
   const transactionsToDisplay = !isSearching
